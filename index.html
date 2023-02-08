@@ -8,13 +8,13 @@
 </head>
 
 <body>
-    <button type="button" onclick="addTask()">Add Task</button>
-    <button type="button" onclick="removeTask()">Remove Task</button>
-    <button type="button" onclick="changeTimeDomain('1hr')">1 HR</button>
-    <button type="button" onclick="changeTimeDomain('3hr')">3 HR</button>
-    <button type="button" onclick="changeTimeDomain('6hr')">6 HR</button>
-    <button type="button" onclick="changeTimeDomain('1day')">1 DAY</button>
-    <button type="button" onclick="changeTimeDomain('1week')">1 WEEK</button>
+    <button type="button" class="add">Add Task</button>
+    <button type="button" class="delete">Remove Task</button>
+    <button type="button" class="1hr">1 HR</button>
+    <button type="button" class="3hr">3 HR</button>
+    <button type="button" class="6hr">6 HR</button>
+    <button type="button" class="1d">1 DAY</button>
+    <button type="button" class="1w">1 WEEK</button>
 </body>
 
 </html>
@@ -26,6 +26,7 @@
 <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-time@3"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3-time-format@4"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
 <script type="text/javascript" src="./src/gantt.js"></script>
 <script type="text/javascript" src="./src/common.js"></script>
