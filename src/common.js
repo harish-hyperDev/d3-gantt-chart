@@ -15,8 +15,15 @@ const formatTime = d3.timeFormat("%d/%b/%Y")
 const parseTime = d3.timeParse("%d/%b/%Y")
 
 var mydate = moment('07/03/2022', 'DD/MM/YYYY');
+console.log(mydate)
 
 console.log("time format ", parseTime(formatTime(new Date(moment(mydate).format("MM/DD/YYYY")))))
+
+const dateParse = (x) => { 
+                            console.log(parseTime(formatTime(new Date(moment(x).format("DD/MM/YYYY"))))); 
+                            return parseTime(formatTime(new Date(moment(x).format("DD/MM/YYYY")))) 
+                          }
+
 // var svg2 = d3.select("body").append("svg")
 // .attr("width", 960)
 // .attr("height", 100)
@@ -39,7 +46,7 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
   // console.log(this)
   data = data.filter(d => d['level_0'] !== '')
   console.log(data)
-
+  console.log(data)
   var callsData;
   var dates;
 
@@ -57,7 +64,9 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
   // dump = data.map(d)
 
   const dateRegEx = /(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}/
-  let filterCallsByDate = []
+  var filterCallsByDate = []
+  var filteredData = []
+  var extraInfo = []
 
   /* for (i in data) {
     console.log(data[i])
@@ -65,14 +74,34 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
       console.log(Object.keys(data[i]))
       
     } 
-    
   } */
 
-  dates = Object.keys(data[0]).filter((d) => dateRegEx.test(d) && data.filter(dk => d[dk] !== '') )
+  dates = Object.keys(data[0]).filter((d) => dateRegEx.test(d))
   console.log("dates ", dates)
 
-  filterCallsByDate = data.map(d => dates.map(date => d[date] ))
-  console.log(filterCallsByDate)
+
+  // filterCallsByDate = data.map(d => dates.map(date => d[date] ))
+  filterCallsByDate = data.map((d,i) => {
+    return Object.keys(d).map((keys) => {
+      if(dateRegEx.test(keys) && (d[keys] !== '' && d[keys] !== null)) {
+        // console.log(keys)
+        // console.log(keys + ' : ' + d[keys])
+        console.log(d[keys])
+        return { callStarted: dateParse(keys) }
+      }
+      
+    }).filter(k => k)
+  })
+
+  console.warn("inner ")
+  filterCallsByDate.map(outer => outer.map(inner => console.log(inner)))
+
+  // filteredData = filterCallsByDate.map(d => d.filter(k => k))
+
+  // filterCallsByDate = data.filter((d,i) => d).map(k => console.log(k))
+
+  console.log("\n calls \n\n", filterCallsByDate)
+  // console.log("\n filtered \n\n", filteredData)
 
   var taskNames = ["01/03/2023", "02/03/2023", "03/03/2023", "04/03/2023", "05/03/2023", "06/03/2023", "07/03/2023"];
 
