@@ -81,17 +81,20 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
 
 
   // filterCallsByDate = data.map(d => dates.map(date => d[date] ))
+  
+  // The below filter removes empty array and only returns callStartedDate and Duration of the call(callEndDate)
   filterCallsByDate = data.map((d,i) => {
     return Object.keys(d).map((keys) => {
-      if(dateRegEx.test(keys) && (d[keys] !== '' && d[keys] !== null)) {
+      if(dateRegEx.test(keys) && d[keys] !== '' && d[keys] !== null && dateParse(keys) !== null) {
         // console.log(keys)
         // console.log(keys + ' : ' + d[keys])
-        console.log(d[keys])
+        // console.log("\nd keys \n\n", d[keys])
+        // console.log(d[keys])
         return { callStarted: dateParse(keys) }
       }
       
     }).filter(k => k)
-  })
+  }).filter(k => {console.log("k", k); return k.length !== 0})
 
   console.warn("inner ")
   filterCallsByDate.map(outer => outer.map(inner => console.log(inner)))
