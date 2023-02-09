@@ -70,3 +70,8 @@ html,body,#wrapper {
 	border-bottom-right-radius: 2px;
 	text-decoration: none;
 }
+
+/* .zoom {
+	fill: none;
+	pointer-events: all;
+}	 */

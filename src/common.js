@@ -1,10 +1,10 @@
 
 var tasks = [
-  { "startDate": new Date("Fri Feb 02 16:00:45 EST 2023"), "endDate": new Date("Fri Feb 02 17:01:45 EST 2023"), "taskName": "02/03/2023", "status": "RUNNING" },
-  { "startDate": new Date("Fri Feb 02 14:00:45 EST 2023"), "endDate": new Date("Fri Feb 02 15:00:45 EST 2023"), "taskName": "02/03/2023", "status": "RUNNING" },
-  { "startDate": new Date("Sat Feb 01 14:00:45 EST 2023"), "endDate": new Date("Sat Feb 01 15:00:45 EST 2023"), "taskName": "02/03/2023", "status": "SUCCEEDED" },
-  { "startDate": new Date("Sun Dec 09 03:27:35 EST 2012"), "endDate": new Date("Sun Dec 09 03:58:43 EST 2012"), "taskName": "04/03/2023", "status": "KILLED" },
-  { "startDate": new Date("Sun Dec 09 03:27:35 EST 2012"), "endDate": new Date("Sun Dec 09 04:58:43 EST 2012"), "taskName": "06/03/2023", "status": "SUCCEEDED" }
+  { "startDate": new Date("Fri Feb 02 16:00:45 EST 2023"), "endDate": new Date("Fri Feb 02 17:01:45 EST 2023"), "taskName": "06/02/2023" },
+  { "startDate": new Date("Fri Feb 02 14:00:45 EST 2023"), "endDate": new Date("Fri Feb 02 15:00:45 EST 2023"), "taskName": "02/02/2023" },
+  { "startDate": new Date("Sat Feb 01 14:00:45 EST 2023"), "endDate": new Date("Sat Feb 01 15:00:45 EST 2023"), "taskName": "02/02/2023" },
+  { "startDate": new Date("Sun Dec 09 03:27:35 EST 2012"), "endDate": new Date("Sun Dec 09 03:58:43 EST 2012"), "taskName": "04/02/2023" },
+  { "startDate": new Date("Sun Dec 09 03:27:35 EST 2012"), "endDate": new Date("Sun Dec 09 04:58:43 EST 2012"), "taskName": "06/02/2023" }
 ];
 
 // console.log(new Date(25/01/2017))
@@ -90,11 +90,11 @@ const momentTimeFomart = (y, d) => {
 
   }*/
 
-  console.log("dt24h ",durationTo24H(m))
+  console.log("dt24h ", durationTo24H(m))
   let resultTime = durationTo24H(m)
   let resultDate = extractDate + " " + resultTime
 
-  let finalRes = new Date(moment(extractDate + " " + resultTime).format('DD/MM/YYYY hh:mm:ss a'))
+  let finalRes = new Date(moment(extractDate + " " + resultTime).format('MM/DD/YYYY hh:mm:ss a'))
 
   // console.log("result date ", resultDate)
   // console.log("ress ", finalRes)
@@ -136,8 +136,8 @@ const dateParse = (x) => {
 var taskStatus = {
   "SUCCEEDED": "bar",
   "FAILED": "bar-failed",
-  "RUNNING": "bar-running",
-  "KILLED": "bar-killed"
+  "Interested": "bar-running",
+  "Not Interested": "bar-killed"
 };
 
 // RegEx for duration HH:MM AM/PM --> /((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))/
@@ -173,20 +173,20 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
   data = data.filter(obj => {
     return Object.values(obj).some(value => value != null && value !== "");
   });
-  
+
   console.log(data)
   // console.log(data)
   var callsData;
 
 
-  
+
 
   var filterCallsByDate = []
   var filteredData = []
   var extraInfo = []
 
 
-  
+
 
   // The below filter removes empty array and only returns callStartedDate and Duration of the call(callEndDate)
   filterCallsByDate = data.map((d, i) => {
@@ -197,10 +197,10 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
       // console.log("date ", keys.match(dateRegEx))
       // console.log("values ", d[keys])
 
-      
+
       // console.log(keys.match(dateRegEx))
       // if (dateRegEx.test(keys) && d[keys] !== '' && d[keys] !== null && dateParse(keys) !== null) {
-      if(dateRegEx.test(keys) && d[keys] !== '' && d[keys] !== null && dateParse(keys) !== null) {
+      if (dateRegEx.test(keys) && d[keys] !== '' && d[keys] !== null && dateParse(keys) !== null) {
 
         /* console.log("extract ", keys + ' ' + timeFormtAmPM.exec(d[keys])[0])
         console.log("extracted full date ", dateParse(keys + ' ' + timeFormtAmPM.exec(d[keys])[0])) */
@@ -209,17 +209,20 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
         // console.log("inside keys ", keys)
 
 
-        console.warn(dateParse(keys+ ' ' + timeFormtAmPM.exec(d[keys])[0]), momentTimeFomart(keys+ ' ' + timeFormtAmPM.exec(d[keys])[0], durationRegEx.exec(d[keys])[0]))
-        
+        console.warn(dateParse(keys + ' ' + timeFormtAmPM.exec(d[keys])[0]), "\n", momentTimeFomart(keys + ' ' + timeFormtAmPM.exec(d[keys])[0], durationRegEx.exec(d[keys])[0]))
+
         // don't remove these variables!!
-        let callStartedDate = dateParse(keys+ ' ' + timeFormtAmPM.exec(d[keys])[0])
-        let callEndDate = momentTimeFomart(keys+ ' ' + timeFormtAmPM.exec(d[keys])[0], durationRegEx.exec(d[keys])[0])
+        let callStartedDate = dateParse(keys + ' ' + timeFormtAmPM.exec(d[keys])[0])
+        // console.log("call start ", callStartedDate)
+        let callEndDate = momentTimeFomart(keys + ' ' + timeFormtAmPM.exec(d[keys])[0], durationRegEx.exec(d[keys])[0])
 
         try {
           // console.warn("time formt err ", timeFormtAmPM.exec(d[keys])[0] === '' && keys)
           return {
-            callStarted: callStartedDate,
-            callEnded: callEndDate
+            startDate: callStartedDate,
+            endDate: callEndDate,
+            taskName: keys,
+            // status: Object.keys(taskStatus)[Math.floor(Math.random() * taskStatusKeys.length)]
           }
         } catch (err) { console.log("exception at key ", keys) }
         // return { callStarted: dateParse(keys) }
@@ -249,13 +252,17 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
 
   reducer = reducer.filter(k => k)
 
+  tasks = reducer
+
+  console.warn("tasks now ")
+  console.log(tasks)
 
   console.log("\n calls \n\n", filterCallsByDate)
   // console.log("\n one \n\n", one)
   console.log("\n reducer \n\n", reducer)
   // console.log("\n filtered \n\n", filteredData)
 
-  var taskNames = ["01/03/2023", "02/03/2023", "03/03/2023", "04/03/2023", "05/03/2023", "06/03/2023", "07/03/2023", "08/03/2023", "09/03/2023", "31/01/2023", "30/01/2023", "29/01/2023", "28/01/2023", "27/01/2023", "26/01/2023", "25/01/2023", "24/01/2023", "23/01/2023", "22/01/2023", "21/01/2023", "20/01/2023"];
+  var taskNames = ["01/02/2023", "02/02/2023", "03/02/2023", "04/02/2023", "05/02/2023", "06/02/2023", "07/02/2023", "08/02/2023", "09/02/2023", "31/01/2023", "30/01/2023", "29/01/2023", "28/01/2023", "27/01/2023", "26/01/2023", "25/01/2023", "24/01/2023", "23/01/2023", "22/01/2023", "21/01/2023", "20/01/2023"];
 
   tasks.sort(function (a, b) {
     return a.endDate - b.endDate;
@@ -269,7 +276,7 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
   var format = "%H:%M";
   var timeDomainString = "1day";
 
-  var gantt = d3.gantt().height(800).width(800).taskTypes(taskNames).taskStatus(taskStatus).tickFormat(format);
+  var gantt = d3.gantt().height(900).width(1200).taskTypes(taskNames).taskStatus(taskStatus).tickFormat(format);
 
   // gantt.timeDomainMode("fixed");
   changeTimeDomain(timeDomainString);
@@ -300,6 +307,18 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
       case "1week":
         format = "%a %H:%M";
         gantt.timeDomain([d3.timeDay.offset(getEndDate(), -7), getEndDate()]);
+        break;
+      case "1month":
+        format = "%a %H:%M";
+        gantt.timeDomain([d3.timeMonth.offset(getEndDate(), -1), getEndDate()]);
+        break;
+      case "3months":
+        format = "%a %H:%M";
+        gantt.timeDomain([d3.timeMonth.offset(getEndDate(), -3), getEndDate()]);
+        break;
+      case "6months":
+        format = "%a %H:%M";
+        gantt.timeDomain([d3.timeMonth.offset(getEndDate(), -6), getEndDate()]);
         break;
       default:
         format = "%H:%M"
@@ -348,4 +367,7 @@ var drawChatFromData = d3.csv('../data/timeline_sample.csv', function (data) {
   document.getElementsByClassName("6hr")[0].addEventListener('click', () => changeTimeDomain("6hr"))
   document.getElementsByClassName("1d")[0].addEventListener('click', () => changeTimeDomain("1day"))
   document.getElementsByClassName("1w")[0].addEventListener('click', () => changeTimeDomain("1week"))
+  document.getElementsByClassName("1m")[0].addEventListener('click', () => changeTimeDomain("1month"))
+  document.getElementsByClassName("3m")[0].addEventListener('click', () => changeTimeDomain("3months"))
+  document.getElementsByClassName("6m")[0].addEventListener('click', () => changeTimeDomain("6months"))
 })
