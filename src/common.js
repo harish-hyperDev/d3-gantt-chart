@@ -65,7 +65,7 @@ const momentTimeFomart = (y, d) => {
     var secs = time.match(/:(\d+):(\d+)/)[2];
     var AMPM = time.match(/\s(.*)$/)[1];
     if ((AMPM === "PM" || AMPM === "pm") && hours < 12) hours = hours + 12;
-    if ((AMPM === "AM" || AMPM === "pm") && hours === 12) hours = hours - 12;
+    if ((AMPM === "AM" || AMPM === "am") && hours === 12) hours = hours - 12;
     var sHours = hours.toString();
     var sMinutes = minutes.toString();
     var sSecs = secs.toString();
